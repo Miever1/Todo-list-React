@@ -47,17 +47,13 @@ class Time extends React.Component {
 }
 
 class TodoForm extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = { inputStatus: "free" }
-    }
-
-    componentDidMount() {
+    checkInputValue() {
         let inputInfo = document.getElementById("input-todo").value;
+        let addBtn = document.getElementsByClassName("btn-add");
         if (inputInfo === "") {
-            this.setState = { inputStatus: "free" }
+            addBtn[0].className = "btn-add";
         } else {
-            this.setState = { inputStatus: "busy" }
+            addBtn[0].className = "btn-add active";
         }
     }
 
@@ -65,14 +61,13 @@ class TodoForm extends React.Component {
         let inputInfo = document.getElementById("input-todo").value;
         let newItem = { index: itemIndex, value: inputInfo, done: false }
         todoItems.push(newItem);
-        console.log(todoItems);
     }
 
     render() {
         return (
             <div className="info-box">
-                <input id="input-todo" type="text" placeholder="Take the garbage out" />
-                <button onClick={this.itemAdd} className={this.state.inputStatus == 'free' ? "btn-add" : "btn-add active"}>+</button>
+                <input id="input-todo" type="text" placeholder="Take the garbage out" onChange={this.checkInputValue} />
+                <button onClick={this.itemAdd} className="btn-add">+</button>
             </div>
         );
     }
@@ -139,29 +134,6 @@ class TodoFooter extends React.Component {
     }
 }
 
-class TodoWrapper extends React.Component {
-    render() {
-        return (
-            <div className="todo-warpper">
-                <Time />
-                <TodoForm />
-                <div>
-                    <p className="status-free">
-                        <img src="./images/beer celebration.svg" alt="" />
-                        Time to chill! You have no todos.
-                        </p>
-                </div>
-                <div>
-                    <p className="status"></p>
-                    <ul className="todo-list archived" id="archived"></ul>
-                </div>
-                <TodoList items={todoItems} />
-                <ControlBtn />
-            </div>
-        )
-    }
-}
-
 class ControlBtn extends React.Component {
     render() {
         return (
@@ -174,16 +146,40 @@ class ControlBtn extends React.Component {
 }
 
 class TodoApp extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            todoItems: todoItems
+        }
+    }
 
     render() {
         return (
             <div className='app'>
                 <TodoHeader />
-                <TodoWrapper />
+                <div className="todo-warpper">
+                    <Time />
+                    <TodoForm />
+                    <TodoList items={this.state.todoItems} />
+                    <ControlBtn />
+                </div>
                 <TodoFooter />
             </div >
         )
     }
 }
+
+/*
+<div>
+                        <p className="status-free">
+                            <img src="./images/beer celebration.svg" alt="" />
+                            Time to chill! You have no todos.
+                        </p>
+                    </div>
+                    <div>
+                        <p className="status"></p>
+                        <ul className="todo-list archived" id="archived"></ul>
+                    </div>
+*/
 
 export default TodoApp;
